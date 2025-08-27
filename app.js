@@ -22,17 +22,25 @@ io.on('connection',function(uniquesocket){
     log("Made socket connection");
     if(!players.white){
         players.white=uniquesocket.id;
-        uniquesocket.emit('playerColor','W');
+        uniquesocket.emit('playerRole','W');
     }
     else if(!players.black){
         players.black=uniquesocket.id;
-        uniquesocket.emit('playerColor','B');
+        uniquesocket.emit('playerRole','B');
     }
     else{
-        uniquesocket.emit('playerColor','Spectator');
+        uniquesocket.emit('playerRole','Spectator');
     }
     socket.on("disconnect",(){
-
+        if(uniquesocket.id===players.white){
+            delete players.white;
+        }
+        else if(uniquesocket.id===players.black){
+            delete players.black;
+        }
+        else{
+            log("A spectator disconnected");
+        }
     })
 });
 
